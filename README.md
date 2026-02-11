@@ -1,8 +1,8 @@
-# AutoStart — Windows ASEP Persistence via Hidden Window
+# ASEP Persistence via Hidden Window
 
 ## Overview
 
-AutoStart is a Windows persistence proof-of-concept that demonstrates how a program can survive reboots and logoffs using only legitimate, documented Win32 APIs. It uses a **self-reinstalling RunOnce** strategy,  rather than permanently sitting in the registry, it re-writes its own autostart entry every time the system shuts down or the user logs off.
+AutoStart is a Windows persistence proof-of-concept that demonstrates how a program can survive reboots and logoffs. It uses a **self-reinstalling RunOnce** strategy,  rather than permanently sitting in the registry, it re-writes its own autostart entry every time the system shuts down or the user logs off.
 
 No admin privileges are required. Everything operates entirely within the current user's context (`HKEY_CURRENT_USER`).
 
