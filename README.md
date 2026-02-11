@@ -2,7 +2,7 @@
 
 ## Overview
 
-AutoStart is a Windows persistence proof-of-concept that demonstrates how a program can survive reboots and logoffs using only legitimate, documented Win32 APIs. It uses a **self-reinstalling RunOnce** strategy — rather than permanently sitting in the registry, it re-writes its own autostart entry every time the system shuts down or the user logs off.
+AutoStart is a Windows persistence proof-of-concept that demonstrates how a program can survive reboots and logoffs using only legitimate, documented Win32 APIs. It uses a **self-reinstalling RunOnce** strategy,  rather than permanently sitting in the registry, it re-writes its own autostart entry every time the system shuts down or the user logs off.
 
 No admin privileges are required. Everything operates entirely within the current user's context (`HKEY_CURRENT_USER`).
 
@@ -36,7 +36,7 @@ System shuts down → on next boot, cycle repeats forever
 
 ### Stage 1 — Hidden Window & Message Loop
 
-On startup, the program registers a window class with Windows and creates a zero-size, fully hidden window. This window has no visible presence — no taskbar entry, no border, no title. It exists purely as a message receiver inside the Windows kernel.
+On startup, the program registers a window class with Windows and creates a zero-size, fully hidden window. This window has no visible presence, no taskbar entry, no border, no title. It exists purely as a message receiver inside the Windows kernel.
 
 The main thread then enters a blocking message loop (`GetMessageW`), suspending itself until a system event arrives. The program consumes no CPU while waiting.
 
@@ -60,7 +60,7 @@ When `WM_ENDSESSION` fires, `InstallASEP()` runs. It:
 3. Writes the path as a `REG_SZ` value named `AutoStart`
 4. Closes the registry handle cleanly via RAII (`AutoRegCloseKey`)
 
-On the next boot, Windows reads `RunOnce`, launches the executable, then deletes the entry. But since the EXE is now running again, it re-installs the entry on the *next* shutdown — perpetuating the cycle indefinitely.
+On the next boot, Windows reads `RunOnce`, launches the executable, then deletes the entry. But since the EXE is now running again, it re-installs the entry on the *next* shutdown,  perpetuating the cycle indefinitely.
 
 ---
 
@@ -76,7 +76,7 @@ A hidden window requires no elevated privileges, no service registration, and no
 The native NT API operates below the Win32 layer, making it less observable to security tools that hook higher-level APIs like `CreateToolhelp32Snapshot`. `Reserved3` in the public `PROCESS_BASIC_INFORMATION` struct is the undocumented field `InheritedFromUniqueProcessId`.
 
 **Why RAII for the registry handle?**
-`AutoRegCloseKey` ensures `RegCloseKey` is always called regardless of which code path is taken — including early returns on error. This prevents handle leaks in a function with multiple exit points.
+`AutoRegCloseKey` ensures `RegCloseKey` is always called regardless of which code path is taken,  including early returns on error. This prevents handle leaks in a function with multiple exit points.
 
 ---
 
